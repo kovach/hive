@@ -44,10 +44,8 @@ keyDownHandler = function(ev) {
 
   keyHandle(k);
 }
-updateUp = function() {
-  camera.up.set(0, 1, 0);
-  camera.up.applyQuaternion(camera.quaternion);
-}
+
+// Game Keybindings
 keyHandle = function(key) {
   switch (key) {
     case 'w':
@@ -78,8 +76,29 @@ keyHandle = function(key) {
   }
 }
 
-initKeyboard = function() {
+mouseMoveHandler = function(ev) {
+  var x =  (ev.clientX / window.innerWidth)  * 2 - 1;
+  var y = -(ev.clientY / window.innerHeight) * 2 + 1;
+
+  updateIntersections(x,y);
+}
+clickHandler = function(ev) {
+  var x = ev.x;
+  var y = ev.y;
+
+  var vector = v(x, y, 1);
+  projector.unprojectVector(vector, camera);
+  console.log('x ', vector.x, 'y ', vector.y, 'z ', vector.z);
+  vector.sub(camera.position).normalize();
+
+  //console.log('x ', x, 'y ', y);
+  console.log('x ', vector.x, 'y ', vector.y, 'z ', vector.z);
+}
+
+initHandlers = function() {
   console.log('key init');
   window.addEventListener('keypress', keyPressHandler);
   window.addEventListener('keydown', keyDownHandler);
+  window.addEventListener('mousemove', mouseMoveHandler);
+  window.addEventListener('click', clickHandler);
 }

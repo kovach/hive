@@ -23,18 +23,25 @@ var initGL = function(initFn, renderFn) {
 
   window.addEventListener('resize', resizeHandler(camera, renderer), false);
 
+  // Projector
+  projector = new THREE.Projector();
+
   var data = initFn(scene, camera, renderer);
 }
 
 
 
 blobs = _.map(_.range(22), randPoint);
+blobs[0] = v(3, 0, 0);
+blob_objects = [];
 lights = _.map(_.range(6), randPoint);
 
 makeSphere = function(geometry, material) {
   return function (p) {
     var s = new THREE.Mesh(geometry, material);
     s.position.set(p.x, p.y, p.z);
+
+    blob_objects.push(s);
     scene.add(s);
   }
 }
@@ -54,6 +61,11 @@ init = function(scene, camera, renderer) {
 
   _.each(blobs, makeSphere(geometry, material));
   _.each(lights, makeLight);
+
+  var arr_origin = camera.position.clone();
+  //var arr_origin = blobs[0].clone();
+  arrow = new THREE.ArrowHelper(v(1,0,0), arr_origin, 7, 0xff0000);
+  scene.add(arrow);
 }
 
 var render = function() {
@@ -66,6 +78,6 @@ var render = function() {
 
 initGL(init);
 
-initKeyboard();
+initHandlers();
 
 render();
