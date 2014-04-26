@@ -1,5 +1,4 @@
 debug = false;
-animations = [];
 
 resizeHandler = function (camera, renderer) {
   return function () {
@@ -45,6 +44,10 @@ keyDownHandler = function(ev) {
 
   keyHandle(k);
 }
+updateUp = function() {
+  camera.up.set(0, 1, 0);
+  camera.up.applyQuaternion(camera.quaternion);
+}
 keyHandle = function(key) {
   switch (key) {
     case 'w':
@@ -55,10 +58,14 @@ keyHandle = function(key) {
       break;
     case 'a':
       camera.rotation.z += 0.1;
+      updateUp();
+      console.log('up: ', camera.up);
       //camera.rotation.y += 0.1;
       break;
     case 'd':
       camera.rotation.z -= 0.1;
+      updateUp();
+      console.log('up: ', camera.up);
       //camera.rotation.y -= 0.1;
       break;
     case 'j':
@@ -73,51 +80,6 @@ keyHandle = function(key) {
       break;
     case 'l':
   }
-}
-
-registerLook = function(v) {
-  var q1 = new THREE.Quaternion();
-  var q2 = new THREE.Quaternion();
-
-  var m1 = new THREE.Matrix4();
-
-  // Start
-  q1.copy(camera.rotation._quaternion);
-  m1.lookAt(camera.position, v, camera.up);
-  // End
-  q2.setFromRotationMatrix(m1);
-
-  // Animation
-  registerAnimation({ type : 'camera',
-    q1 : q1, q2 : q2,
-    duration : 200,
-    init : new THREE.Quaternion()
-  });
-}
-
-registerAnimation = function(spec) {
-  var t = new Date().getTime();
-  var updates =
-  { camera : function(state, t) {
-      THREE.Quaternion.slerp(spec.q1, spec.q2, state, t);
-      camera.rotation._quaternion.copy(state);
-      console.log(t);
-    }
-  , test : function(state, t) {
-      console.log(t);
-    }
-  }
-
-  animations.push(
-      { duration : spec.duration
-      , start : t
-      , state : spec.init 
-      , update : updates[spec.type]
-      });
-}
-normalizeTime = function(animation) {
-  var t = new Date().getTime();
-  return (t - animation.start) / animation.duration;
 }
 
 initKeyboard = function() {

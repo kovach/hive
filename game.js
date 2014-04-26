@@ -1,4 +1,11 @@
 // TODO
+// generate random spheres
+// more lights
+// 3d selection
+// camera translation
+// look at/away keybinding
+//
+// INVERSION??
 
 
 var initGL = function(initFn, renderFn) {
@@ -35,15 +42,7 @@ var initLights = function() {
 var render = function() {
   requestAnimationFrame(render);
 
-  animations = _.filter(animations, function(a) {
-    var t = normalizeTime(a);
-    if (t > 1) {
-      return false;
-    } else {
-      a.update(a.state, t);
-      return true;
-    }
-  });
+  animations = _.filter(animations, updateAnimation);
 
   renderer.render(scene, camera);
 }
