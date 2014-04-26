@@ -1,3 +1,4 @@
+camera_animation = undefined;
 animations = [];
 
 // Util
@@ -16,17 +17,26 @@ updateAnimation = function(a) {
     return true;
   }
 }
+updateAnimations = function() {
+  animations = _.filter(animations, updateAnimation);
+  camera_animation = _.filter(camera_animation, updateAnimation);
 
 // Register
 registerAnimation = function(spec) {
-  var t = new Date().getTime();
+  var start = new Date().getTime();
+  spec.start = start;
+  switch (spec.type) {
+    case 'camera':
+      if (camera_animation.length === 0) {
+        camera_animation.push(spec);
+      }
+      break;
+    default:
+      animations.push(spec);
+      break;
+  }
+}
 
-  animations.push(
-      { duration : spec.duration
-      , start : t
-      , state : spec.init 
-      , update : spec.update
-      });
 }
 
 // Animation types
@@ -38,7 +48,7 @@ registerTest = function() {
   registerAnimation(
       { duration : 1000
       , type : 'test'
-      , init : undefined
+      , state : undefined
       , update : update
       });
 }
@@ -62,10 +72,10 @@ registerLook = function(v) {
   }
 
   registerAnimation(
-      { type : 'look'
+      { type : 'camera'
       , q1 : q1, q2 : q2
       , duration : 200
-      , init : new THREE.Quaternion()
+      , state : new THREE.Quaternion()
       , update : update
       });
 }
@@ -86,13 +96,14 @@ registerRoll = function(delta) {
   update = function(state, t) {
     THREE.Quaternion.slerp(q1, q2, state, Math.sqrt(t));
     camera.quaternion.copy(state);
+    updateUp();
   }
 
   registerAnimation(
-      { type : 'roll'
+      { type : 'camera'
       , q1 : q1, q2 : q2
-      , duration : 1000
-      , init : new THREE.Quaternion()
+      , duration : 1400
+      , state : new THREE.Quaternion()
       , update : update
       });
 }

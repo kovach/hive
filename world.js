@@ -1,7 +1,8 @@
 randPoint = function() {
-  var xmax = 100;
-  var ymax = 100;
-  var zmax = 100;
+  var b = 22;
+  var xmax = b;
+  var ymax = b;
+  var zmax = b;
 
   return v( Math.random() * xmax - xmax / 2
           , Math.random() * ymax - ymax / 2

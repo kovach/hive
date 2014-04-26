@@ -7,16 +7,19 @@
 
 
 var initGL = function(initFn, renderFn) {
+  var width = window.innerWidth;
+  var height = window.innerHeight;
+
   // Stuff
   scene = new THREE.Scene();
   renderer = new THREE.WebGLRenderer();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(width, height);
   document.body.appendChild(renderer.domElement);
 
 
   // Camera init
   camera = new THREE.PerspectiveCamera(75,
-      window.innerWidth / window.innerHeight, 0.1, 1000 );
+      width / height, 0.1, 1000 );
 
   window.addEventListener('resize', resizeHandler(camera, renderer), false);
 
@@ -25,7 +28,7 @@ var initGL = function(initFn, renderFn) {
 
 
 
-blobs = _.map(_.range(3), randPoint);
+blobs = _.map(_.range(22), randPoint);
 lights = _.map(_.range(6), randPoint);
 
 makeSphere = function(geometry, material) {
@@ -47,7 +50,7 @@ makeLight = function(v) {
 // Make the spheres
 init = function(scene, camera, renderer) {
   var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
-  var geometry = new THREE.SphereGeometry(1, 22, 22);
+  var geometry = new THREE.SphereGeometry(1, 40, 40);
 
   _.each(blobs, makeSphere(geometry, material));
   _.each(lights, makeLight);
@@ -56,7 +59,7 @@ init = function(scene, camera, renderer) {
 var render = function() {
   requestAnimationFrame(render);
 
-  animations = _.filter(animations, updateAnimation);
+  updateAnimations();
 
   renderer.render(scene, camera);
 }

@@ -57,13 +57,13 @@ keyHandle = function(key) {
       //camera.rotation.x -= 0.1;
       break;
     case 'a':
-      registerRoll(0.5);
+      registerRoll(1.5);
       //camera.rotation.z += 0.1;
       //updateUp();
       //console.log('up: ', camera.up);
       break;
     case 'd':
-      registerRoll(-0.5);
+      registerRoll(-1.5);
       //camera.rotation.z -= 0.1;
       //updateUp();
       //console.log('up: ', camera.up);
