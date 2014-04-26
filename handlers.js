@@ -51,32 +51,28 @@ updateUp = function() {
 keyHandle = function(key) {
   switch (key) {
     case 'w':
-      camera.rotation.x += 0.1;
+      //camera.rotation.x += 0.1;
       break;
     case 's':
-      camera.rotation.x -= 0.1;
+      //camera.rotation.x -= 0.1;
       break;
     case 'a':
-      camera.rotation.z += 0.1;
-      updateUp();
-      console.log('up: ', camera.up);
-      //camera.rotation.y += 0.1;
+      registerRoll(0.5);
+      //camera.rotation.z += 0.1;
+      //updateUp();
+      //console.log('up: ', camera.up);
       break;
     case 'd':
-      camera.rotation.z -= 0.1;
-      updateUp();
-      console.log('up: ', camera.up);
-      //camera.rotation.y -= 0.1;
+      registerRoll(-0.5);
+      //camera.rotation.z -= 0.1;
+      //updateUp();
+      //console.log('up: ', camera.up);
       break;
     case 'j':
-      //camera.up.set(0, -1, 0);
-      //camera.lookAt(vec(points[0]));
-      registerLook(vec(points[0]));
+      registerLook(vec(blobs[0]));
       break;
     case 'k':
-      //camera.up.set(0, 1, 0);
-      //camera.lookAt(vec(points[1]));
-      registerLook(vec(points[1]));
+      registerLook(vec(blobs[1]));
       break;
     case 'l':
   }
