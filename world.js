@@ -29,7 +29,7 @@ World.setFocus = function(hit) {
   World.focus = hit.object;
   World.focus.material.color.set(World.focusColor);
 
-  console.log('dist: ', hit.distance);
+  //console.log('dist: ', hit.distance);
 }
 
 World.updateFocus = function(hit) {
@@ -56,15 +56,18 @@ World.setTarget = function(id) {
   World.target = id;
 }
 
+World.lookupObj = function(id) {
+  return lookup(blob_objects, id);
+}
 World.lookup = function(id) {
   return lookup(blobs, id);
 }
 
 World.move = function() {
-  // Try this initially with focus, rather than "target"
   var target = World.target;
   if (target) {
-    var dest = World.focus.position.clone();
+    var obj3d = World.lookupObj(target);
+    var dest = obj3d.position.clone();
     dest.sub(camera.position);
     var len = dest.length();
     dest.multiplyScalar((len - World.lookup(target).radius*2) / len);

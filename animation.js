@@ -140,7 +140,7 @@ registerRoll = function(delta) {
   r.z += delta;
   q2.setFromEuler(r);
 
-  registerSlerp(camera, q2, 1400, Math.sqrt);
+  registerSlerp(camera, q2, 1000, Math.sqrt);
 }
 
 

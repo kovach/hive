@@ -49,7 +49,7 @@ keyDownHandler = function(ev) {
 keyHandle = function(key) {
   switch (key) {
     case 'w':
-      //World.move();
+      World.move();
       break;
     case 'e':
       registerTurn();
@@ -95,7 +95,10 @@ clickHandler = function(ev) {
     if (mobj) {
       World.setTarget(id);
       registerLook(mobj.position);
-      World.move();
+      console.log(ev);
+      if (ev.button == 2) {
+        World.move();
+      }
     } else {
       console.log('ERROR');
     }
@@ -108,4 +111,8 @@ initHandlers = function() {
   window.addEventListener('keydown', keyDownHandler);
   window.addEventListener('mousemove', mouseMoveHandler);
   window.addEventListener('click', clickHandler);
+  window.addEventListener('contextmenu', function(ev) {
+    clickHandler(ev);
+    ev.preventDefault();
+  });
 }
