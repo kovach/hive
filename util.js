@@ -7,3 +7,7 @@ vec = function(p) {
 v = function(x, y, z) {
   return new THREE.Vector3(x, y, z);
 }
+lookup = function(list, key) {
+  return _.find(list, function(v) { return v._id === key });
+}
+

@@ -8,18 +8,28 @@ updateUp = function() {
 updateIntersections = function(x, y) {
   var vector = v(x, y, 1);
   projector.unprojectVector(vector, camera);
+
   var origin = camera.position.clone();
-  //var origin = blobs[0].clone();
 
   var ray = new THREE.Raycaster(origin,
       vector.sub(origin).normalize());
 
-  //console.log('ray: ', ray.ray.direction);
-
   var objs = ray.intersectObjects(blob_objects);
+  // Hit a blob
   if (objs.length > 0) {
-    console.log(objs);
+
+    var hit = objs[0];
+
+    World.updateFocus(hit);
+
+  } else {
+    // Reset old target color
+    if (World.focus) {
+      World.focus.material.color.set(World.blobColor);
+    }
+    World.unfocus();
   }
 
-  arrow.setDirection(vector);
+
+  //arrow.setDirection(vector);
 }

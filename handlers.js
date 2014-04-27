@@ -86,13 +86,15 @@ clickHandler = function(ev) {
   var x = ev.x;
   var y = ev.y;
 
-  var vector = v(x, y, 1);
-  projector.unprojectVector(vector, camera);
-  console.log('x ', vector.x, 'y ', vector.y, 'z ', vector.z);
-  vector.sub(camera.position).normalize();
-
-  //console.log('x ', x, 'y ', y);
-  console.log('x ', vector.x, 'y ', vector.y, 'z ', vector.z);
+  if (World.focus) {
+    var id = World.focus._id;
+    var mobj = lookup(blob_objects, id);
+    if (mobj) {
+      registerLook(mobj.position);
+    } else {
+      console.log('ERROR');
+    }
+  }
 }
 
 initHandlers = function() {
