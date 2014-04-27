@@ -1,7 +1,4 @@
 // TODO
-// 3d selection
-// camera translation
-// look at/away keybinding
 //
 // INVERSION??
 
@@ -31,22 +28,30 @@ var initGL = function(initFn, renderFn) {
 
 
 
-blobs = _.map(_.range(22), World.randPoint);
-blobs[0] = v(3, 0, 0);
+blobs = _.map(_.range(100), World.makeBlob);
 blob_objects = [];
-lights = _.map(_.range(6), World.randPoint);
+lights = _.map(_.range(7), function() { return World.randPoint(3); });
 
-makeSphere = function(geometry) {
-  return function (p) {
-    var material = new THREE.MeshLambertMaterial( { color: World.blobColor } );
-    var s = new THREE.Mesh(geometry, material);
-    s.position.set(p.x, p.y, p.z);
+geometries = _.map(_.range(5), function(i) {
+  var radius = 0.1 + i / 5 * 1.2;
+  return { radius : radius
+         , geometry : new THREE.SphereGeometry(radius, 40, 40)
+         };
+});
 
-    s._id = _.uniqueId();
+makeBlob = function (b) {
+  //var geometry = new THREE.SphereGeometry(b.radius, 40, 40);
+  var geometry = geometries[randInt(geometries.length)];
+  b.radius = geometry.radius;
+  var material = new THREE.MeshLambertMaterial({ color: World.blobColor });
+  var s = new THREE.Mesh(geometry.geometry, material);
 
-    blob_objects.push(s);
-    scene.add(s);
-  }
+  s.position.copy(b.position);
+  s._id = _.uniqueId();
+  b._id = s._id;
+
+  blob_objects.push(s);
+  scene.add(s);
 }
 makeLight = function(v) {
   var light = new THREE.PointLight(0x222222);
@@ -65,9 +70,8 @@ makeArrow = function() {
 
 // Make the spheres
 init = function(scene, camera, renderer) {
-  var geometry = new THREE.SphereGeometry(1, 40, 40);
 
-  _.each(blobs, makeSphere(geometry));
+  _.each(blobs, makeBlob);
   _.each(lights, makeLight);
 
   //makeArrow();

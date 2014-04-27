@@ -1,18 +1,27 @@
 World = {};
 World.focus = undefined;
+World.target = undefined;
 World.blobColor = 0xffffff;
 World.focusColor = 0x66ccff;
+World.blobRadius = 1;
 
+World.makeBlob = function() {
+  var b = {};
+  b.radius = 0.4 + Math.random() * 0.4
+  b.position = World.randPoint(1);
 
-World.randPoint = function() {
+  return b;
+}
+
+World.randPoint = function(scale) {
   var b = 22;
   var xmax = b;
   var ymax = b;
   var zmax = b;
 
-  return v( Math.random() * xmax - xmax / 2
-          , Math.random() * ymax - ymax / 2
-          , Math.random() * zmax - zmax / 2
+  return v( scale * (Math.random() * xmax - xmax / 2)
+          , scale * (Math.random() * ymax - ymax / 2)
+          , scale * (Math.random() * zmax - zmax / 2)
           );
 }
 
@@ -22,6 +31,7 @@ World.setFocus = function(hit) {
 
   console.log('dist: ', hit.distance);
 }
+
 World.updateFocus = function(hit) {
   if (World.focus) {
     if (World.focus._id === hit.object._id) {
@@ -35,7 +45,6 @@ World.updateFocus = function(hit) {
     World.setFocus(hit);
   }
 }
-
 World.unfocus = function() {
   if (World.focus) {
     World.focus.material.color.set(World.blobColor);
@@ -43,3 +52,24 @@ World.unfocus = function() {
   }
 }
 
+World.setTarget = function(id) {
+  World.target = id;
+}
+
+World.lookup = function(id) {
+  return lookup(blobs, id);
+}
+
+World.move = function() {
+  // Try this initially with focus, rather than "target"
+  var target = World.target;
+  if (target) {
+    var dest = World.focus.position.clone();
+    dest.sub(camera.position);
+    var len = dest.length();
+    dest.multiplyScalar((len - World.lookup(target).radius*2) / len);
+    registerTranslation(dest);
+  } else {
+    console.log('no target!');
+  }
+}

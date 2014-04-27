@@ -10,4 +10,8 @@ v = function(x, y, z) {
 lookup = function(list, key) {
   return _.find(list, function(v) { return v._id === key });
 }
+randInt = function(max) {
+ return Math.floor((Math.random()*max)); 
+}
+id = function(x) { return x; }
 

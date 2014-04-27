@@ -49,7 +49,10 @@ keyDownHandler = function(ev) {
 keyHandle = function(key) {
   switch (key) {
     case 'w':
-      //camera.rotation.x += 0.1;
+      //World.move();
+      break;
+    case 'e':
+      registerTurn();
       break;
     case 's':
       //camera.rotation.x -= 0.1;
@@ -90,7 +93,9 @@ clickHandler = function(ev) {
     var id = World.focus._id;
     var mobj = lookup(blob_objects, id);
     if (mobj) {
+      World.setTarget(id);
       registerLook(mobj.position);
+      World.move();
     } else {
       console.log('ERROR');
     }
