@@ -15,3 +15,6 @@ randInt = function(max) {
 }
 id = function(x) { return x; }
 
+xy = function(x, y) {
+  return new THREE.Vector3(x,y,0);
+}

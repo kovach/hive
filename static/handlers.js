@@ -1,12 +1,22 @@
-debug = false;
-
 resizeHandler = function (camera, renderer) {
   return function () {
     renderer.setSize(window.innerWidth, window.innerHeight);
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
+    updateOrtho();
+    //camera.aspect = window.innerWidth / window.innerHeight;
+    //camera.updateProjectionMatrix();
   }
 }
+
+updateOrtho = function() {
+  var width = window.innerWidth;
+  var height = window.innerHeight;
+  camera.left = width / -2;
+  camera.right = width / 2;
+  camera.top = height / 2;
+  camera.bottom = height / -2;
+  camera.updateProjectionMatrix();
+}
+
 
 
 keyPressHandler = function(ev) {
@@ -80,37 +90,34 @@ keyHandle = function(key) {
 }
 
 mouseMoveHandler = function(ev) {
-  var x =  (ev.clientX / window.innerWidth)  * 2 - 1;
-  var y = -(ev.clientY / window.innerHeight) * 2 + 1;
-
-  updateIntersections(x,y);
+  updateIntersections(ev.clientX, ev.clientY); 
 }
 clickHandler = function(ev) {
   var x = ev.x;
   var y = ev.y;
 
-  if (World.focus) {
-    var id = World.focus._id;
-    var mobj = lookup(blob_objects, id);
-    if (mobj) {
-      World.setTarget(id);
-      registerLook(mobj.position);
-      console.log(ev);
-      if (ev.button == 2) {
-        World.move();
-      }
-    } else {
-      console.log('ERROR');
-    }
-  }
+  //if (World.focus) {
+  //  var id = World.focus._id;
+  //  var mobj = lookup(blob_objects, id);
+  //  if (mobj) {
+  //    World.setTarget(id);
+  //    registerLook(mobj.position);
+  //    console.log(ev);
+  //    if (ev.button == 2) {
+  //      World.move();
+  //    }
+  //  } else {
+  //    console.log('ERROR');
+  //  }
+  //}
 }
 
 initHandlers = function() {
   console.log('key init');
-  window.addEventListener('keypress', keyPressHandler);
-  window.addEventListener('keydown', keyDownHandler);
+  //window.addEventListener('keypress', keyPressHandler);
+  //window.addEventListener('keydown', keyDownHandler);
   window.addEventListener('mousemove', mouseMoveHandler);
-  window.addEventListener('click', clickHandler);
+  //window.addEventListener('click', clickHandler);
   window.addEventListener('contextmenu', function(ev) {
     clickHandler(ev);
     ev.preventDefault();
