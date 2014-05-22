@@ -12,5 +12,4 @@ var server = function() {
 
 module.exports = {
   server: server,
-  //move: move
 }

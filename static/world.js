@@ -14,9 +14,7 @@ world.init_world = function(things) {
 
   _.each(things, function(thing) {
     thing.update = function() {
-      console.log('trying to update');
       if (thing.object) {
-        console.log('has object');
         thing.object.position.x = thing.x * world.unit;
         thing.object.position.y = thing.y * world.unit;
       }

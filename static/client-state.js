@@ -38,9 +38,7 @@ var response_handler = function(req) {
         console.log('req: ', req);
         var response = respJSON(req);
         var validated_moves = response.moves;
-
-
-        console.log('valid moves: ', response.moves);
+        //console.log('valid moves: ', response.moves);
         the_client.game.update(validated_moves);
       } else {
         console.log('ERROR: ', req.responseText);

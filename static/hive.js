@@ -21,17 +21,18 @@ var initGL = function() {
   document.body.appendChild(renderer.domElement);
 
   // Camera init
-  if (camera_mode === camera_modes.ortho) {
-    camera = new THREE.OrthographicCamera(
+  camera = withCamera({
+    ortho: function() {
+      return new THREE.OrthographicCamera(
         width / -2, width / 2, height / 2, height / -2,
         1, 1000);
-  } else if (camera_mode === camera_modes.perspective) {
-    camera = new THREE.PerspectiveCamera(75,
+    },
+    perspective: function() {
+      return new THREE.PerspectiveCamera(75,
         width / height, 0.1, 1000 );
-  } else {
-    console.log('ERROR hive.js: must select camera mode');
-    return;
-  }
+    },
+  });
+
   camera.position.z = 500;
 
   scene.add(camera);

@@ -49,15 +49,14 @@ game = function() {
         switch (msg.head) {
           case 'move':
             var obj = g.look(msg.id);
-            console.log('found', obj);
             if (obj !== undefined) {
               obj.x += msg.x;
               obj.y += msg.y;
 
+              // Exists on client but not server
               if (obj.update) {
                 obj.update();
               }
-              console.log(obj);
             }
             break;
         }

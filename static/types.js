@@ -29,7 +29,6 @@ checker = {
       case 'type':
         return typeof(form.value) === typeof(val);
       case 'obj':
-        console.log('obj');
         var result = true;
         var no_match = _.find(form.val, function(subform, key) {
             if (val[key] === undefined || !checker.check(subform, val[key])) {

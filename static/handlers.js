@@ -1,10 +1,23 @@
-// TODO fix resize handler/ortho camera
+withCamera = function(cases) {
+  if (camera_mode === camera_modes.ortho) {
+    return cases.ortho();
+  } else if (camera_mode === camera_modes.perspective) {
+    return cases.perspective();
+  }
+}
 resizeHandler = function (camera, renderer) {
   return function () {
     renderer.setSize(window.innerWidth, window.innerHeight);
-    updateOrtho();
-    //camera.aspect = window.innerWidth / window.innerHeight;
-    //camera.updateProjectionMatrix();
+
+    withCamera({
+      ortho: updateOrtho,
+
+      perspective: function() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+      },
+    });
+
   }
 }
 
