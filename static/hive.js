@@ -40,9 +40,10 @@ var initWorld = function(things) {
   _.each(things, function(thing) {
     var material = new THREE.MeshBasicMaterial({color: 0xffffff});
     var cube = new THREE.Mesh(geometry, material);
-    cube.position = xy(thing.x * world.unit, thing.y * world.unit);
     cube._id = thing.id;
     world.objects.push(cube);
+    thing.object = cube;
+    thing.update();
     scene.add(cube);
   });
 

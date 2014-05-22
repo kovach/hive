@@ -19,6 +19,7 @@ checker = {
     });
     return result;
   },
+  // RETURNS UNDEFINED if it's a match
   check: function(form, val) {
     switch (form.type) {
       case 'any':
@@ -35,19 +36,29 @@ checker = {
               return true;
             }
         });
-        if (no_match === undefined) {
-          return true;
-        } else {
-          return false;
-        }
+        return no_match;
+        //if (no_match === undefined) {
+        //  return true;
+        //} else {
+        //  return false;
+        //}
     }
+  },
+  // RETURN CONVENTION IS OPPOSITE OF check
+  check_forms: function(forms, val) {
+    var matching_form =_.find(forms, function(form) {
+      var error = checker.check(form, val);
+      if (error === undefined) {
+        return true;
+      }
+    });
+    return matching_form;
   },
 }
 
 var c = checker;
 var eqm = checker.eq('move');
 var num = checker.type(0);
-var move = checker.obj({head: c.eq('move'), x: c.type(0), y: c.type(0), id: c.any() });
 
 
 

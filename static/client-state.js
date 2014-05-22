@@ -1,3 +1,10 @@
+var client = function() {
+  this.time = 0;
+  this.game = new game();
+}
+
+var the_client = new client();
+
 var respJSON = function(req) {
   return JSON.parse(req.responseText);
 }
@@ -8,7 +15,8 @@ var send_init = function() {
       if (req.readyState == 4) {
         if (req.status == 200) {
           var json = respJSON(req);
-          world.init_world(json.objects);
+
+          the_client.game.init_world(json.objects, world);
 
         } else {
           console.log('error initializing!');
@@ -20,7 +28,6 @@ var send_init = function() {
   send_data('init', handler, {});
 }
 
-
 var response_handler = function(req) {
   return function() {
     //TODO check for server error
@@ -29,9 +36,12 @@ var response_handler = function(req) {
         end_time = new Date().getTime();
         console.log((end_time - start_time));
         console.log('req: ', req);
-
         var response = respJSON(req);
+        var validated_moves = response.moves;
+
+
         console.log('valid moves: ', response.moves);
+        the_client.game.update(validated_moves);
       } else {
         console.log('ERROR: ', req.responseText);
       }

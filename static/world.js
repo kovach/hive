@@ -12,6 +12,17 @@ world.time = 0;
 world.init_world = function(things) {
   world.things = things;
 
+  _.each(things, function(thing) {
+    thing.update = function() {
+      console.log('trying to update');
+      if (thing.object) {
+        console.log('has object');
+        thing.object.position.x = thing.x * world.unit;
+        thing.object.position.y = thing.y * world.unit;
+      }
+    }
+  });
+
   initWorld(things);
 }
 
@@ -66,7 +77,7 @@ world.lookup = function(id) {
 world.send_move = function() {
   if (world.focus) {
     var id = world.focus._id;
-    var move = {head: 'move', id: id, x: 0, y: 1}
+    var move = {head: 'move', id: id, x: 0, y: 1};
     var msg = {time: world.time, moves: [move]};
     send_msg(msg);
     world.time++;
