@@ -1,3 +1,4 @@
+// TODO fix resize handler/ortho camera
 resizeHandler = function (camera, renderer) {
   return function () {
     renderer.setSize(window.innerWidth, window.innerHeight);
