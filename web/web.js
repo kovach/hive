@@ -6,13 +6,19 @@ var express = require('express');
 var fs = require('fs');
 
 var _ = require('underscore');
-//eval(fs.readFileSync('static/init_world.js')+'');
+//eval(fs.readFileSync('static/server.js')+'');
+
+var S = require('../static/server.js');
+
+var server = new S.server();
 
 var app = express()
   .use(express.static('static'))
   .post('/init', function(req, res) {
     console.log('/init');
-    res.send(JSON.stringify({}));
+    var msg = {objects: server.game.objects};
+    var data = JSON.stringify(msg);
+    res.send(data);
   })
   .post('/req', function(req, res) {
     var ts = req.query.ts;
@@ -20,13 +26,18 @@ var app = express()
   })
   .post('/send', function(req, res) {
     console.log('/send');
-    var data = JSON.parse(req.query.data);
-    if (data) { 
-      console.log('data: ', data);
-      _.each(data, function(entry, ind) {
-      });
-      res.send('here is some data...');
-    }
+    var msg = JSON.parse(req.query.data);
+    var client_time = msg.time;
+    var moves = msg.moves;
+
+    console.log('client time: ', client_time);
+    console.log('moves: ', moves);
+
+    var valid = server.game.update(moves);
+
+    var response = {moves: valid, _id: msg._id};
+    var data = JSON.stringify(response);
+    res.send(data);
   })
   ;
 var debug = false;

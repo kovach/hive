@@ -93,23 +93,11 @@ mouseMoveHandler = function(ev) {
   updateIntersections(ev.clientX, ev.clientY); 
 }
 clickHandler = function(ev) {
-  var x = ev.x;
-  var y = ev.y;
+  //var x = ev.x;
+  //var y = ev.y;
 
-  //if (World.focus) {
-  //  var id = World.focus._id;
-  //  var mobj = lookup(blob_objects, id);
-  //  if (mobj) {
-  //    World.setTarget(id);
-  //    registerLook(mobj.position);
-  //    console.log(ev);
-  //    if (ev.button == 2) {
-  //      World.move();
-  //    }
-  //  } else {
-  //    console.log('ERROR');
-  //  }
-  //}
+  console.log('click');
+  world.send_move();
 }
 
 initHandlers = function() {
@@ -117,7 +105,7 @@ initHandlers = function() {
   //window.addEventListener('keypress', keyPressHandler);
   //window.addEventListener('keydown', keyDownHandler);
   window.addEventListener('mousemove', mouseMoveHandler);
-  //window.addEventListener('click', clickHandler);
+  window.addEventListener('click', clickHandler);
   window.addEventListener('contextmenu', function(ev) {
     clickHandler(ev);
     ev.preventDefault();

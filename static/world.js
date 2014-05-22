@@ -7,6 +7,14 @@ world.blobRadius = 1;
 world.objects = [];
 world.unit = 22;
 
+world.time = 0;
+
+world.init_world = function(things) {
+  world.things = things;
+
+  initWorld(things);
+}
+
 world.randPoint = function(scale) {
   var b = 22;
   var xmax = b;
@@ -55,3 +63,12 @@ world.lookup = function(id) {
   return lookup(blobs, id);
 }
 
+world.send_move = function() {
+  if (world.focus) {
+    var id = world.focus._id;
+    var move = {head: 'move', id: id, x: 0, y: 1}
+    var msg = {time: world.time, moves: [move]};
+    send_msg(msg);
+    world.time++;
+  }
+}
