@@ -1,13 +1,18 @@
 // TODO handle posts without requiring express library
 var http = require("http");
 var express = require('express');
+require('express-namespace');
+
+
 
 var _ = require('underscore');
 var S = require('../static/server.js');
 
 var server = new S.server();
 
-var app = express()
+var app = express();
+app.namespace('/hive', function() {
+  app
   .use(express.static('static'))
   .post('/init', function(req, res) {
     console.log('/init');
@@ -35,8 +40,9 @@ var app = express()
     res.send(data);
   })
   ;
+});
 var debug = false;
 if (!debug) {
-  http.createServer(app).listen(8000); 
+  http.createServer(app).listen(3000); 
 } else {
 }
