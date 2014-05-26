@@ -4,15 +4,21 @@ var WSS = require('ws').Server
   , app = express()
   ;
 
-var server = app.use(express.static('static'));
-http.createServer(app).listen(2000);
+app.use(express.static('static'));
+var server = http.createServer(app);
+server.listen(2000);
+
 var wss = new WSS({server: server});
 
 //wss.on('connection', function() {
 //  ws.send('hi there');
 //});
 
-wss.on('message', function(data, flags) {
-  console.log('data: ', data);
-  console.log('flags: ', flags);
+console.log('foo');
+wss.on('connection', function(ws) {
+  console.log('connection!');
+  ws.on('message', function(message) {
+    console.log('received: ', message);
+  });
+  ws.send('hello from server');
 });
