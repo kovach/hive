@@ -1,13 +1,8 @@
 // TODO handle posts without requiring express library
 var http = require("http");
-//var connect = require("connect");
 var express = require('express');
 
-var fs = require('fs');
-
 var _ = require('underscore');
-//eval(fs.readFileSync('static/server.js')+'');
-
 var S = require('../static/server.js');
 
 var server = new S.server();
@@ -42,6 +37,6 @@ var app = express()
   ;
 var debug = false;
 if (!debug) {
-  http.createServer(app).listen(3000); 
+  http.createServer(app).listen(8000); 
 } else {
 }
