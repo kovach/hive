@@ -11,7 +11,7 @@ var S = require('../static/server.js');
 var server = new S.server();
 
 var app = express();
-app.namespace('/hive', function() {
+app.namespace('', function() {
   app
   .use(express.static('static'))
   .post('/init', function(req, res) {

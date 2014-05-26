@@ -1,3 +1,4 @@
+var app_root = '/hive'
 var client = function() {
   this.time = 0;
   this.game = new game();
@@ -57,7 +58,7 @@ var send_data = function(stub, handler, msg) {
   msg._id = id;
   var data = JSON.stringify(msg);
 
-  req.open("POST", '/' + stub + '?data=' + data, true);
+  req.open("POST", app_root + '/' + stub + '?data=' + data, true);
   req.send();
 
   return id;
