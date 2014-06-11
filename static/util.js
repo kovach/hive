@@ -7,9 +7,6 @@ vec = function(p) {
 v = function(x, y, z) {
   return new THREE.Vector3(x, y, z);
 }
-lookup = function(list, key) {
-  return _.find(list, function(v) { return v._id === key });
-}
 randInt = function(max) {
  return Math.floor((Math.random()*max)); 
 }
@@ -18,3 +15,12 @@ id = function(x) { return x; }
 xy = function(x, y) {
   return new THREE.Vector3(x,y,0);
 }
+
+module.exports = {
+  xyz: xyz,
+  v: v,
+  randInt, randInt,
+  id, id,
+  xy, xy,
+}
+

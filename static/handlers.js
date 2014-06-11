@@ -1,25 +1,5 @@
-withCamera = function(cases) {
-  if (camera_mode === camera_modes.ortho) {
-    return cases.ortho();
-  } else if (camera_mode === camera_modes.perspective) {
-    return cases.perspective();
-  }
-}
-resizeHandler = function (camera, renderer) {
-  return function () {
-    renderer.setSize(window.innerWidth, window.innerHeight);
-
-    withCamera({
-      ortho: updateOrtho,
-
-      perspective: function() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-      },
-    });
-
-  }
-}
+var world = require('./world.js');
+var rendering = require('./rendering.js');
 
 updateOrtho = function() {
   var width = window.innerWidth;
@@ -31,6 +11,21 @@ updateOrtho = function() {
   camera.updateProjectionMatrix();
 }
 
+resizeHandler = function (camera, renderer) {
+  return function () {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    rendering.withCamera({
+      ortho: updateOrtho,
+
+      perspective: function() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+      },
+    });
+
+  }
+}
 
 
 keyPressHandler = function(ev) {
@@ -107,9 +102,6 @@ mouseMoveHandler = function(ev) {
   updateIntersections(ev.clientX, ev.clientY); 
 }
 clickHandler = function(ev) {
-  //var x = ev.x;
-  //var y = ev.y;
-
   console.log('click');
   world.send_move();
 }
@@ -125,3 +117,8 @@ initHandlers = function() {
     ev.preventDefault();
   });
 }
+
+module.exports = {
+  initHandlers: initHandlers,
+}
+
