@@ -38,6 +38,7 @@ canvas {
 
   font-family: monospace;
   font-size: 12pt;
+
 }
 .str, .symbol {
   display: inline-block;

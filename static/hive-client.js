@@ -108,7 +108,8 @@ var init_ui = function() {
       ws.send(JSON.stringify(to_msg(char)));
     }
 
-    i.add_key_handler(box, handler, true);
+    var debug = false;
+    i.add_key_handler(box, handler, debug);
   }
 
   return init_socket(mk_handler);

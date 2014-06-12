@@ -26,12 +26,10 @@ var mk_div = function(parent, cl, id) {
 }
 var mk_text = function(parent, text, color) {
   var box = mk_div(parent, 'str', _.uniqueId());
-  console.log(color !== undefined);
   var node = document.createTextNode(text);
   box.appendChild(node);
 
   if (color) {
-    console.log('setting color', color);
     box.style.color = color;
   }
   return node;
