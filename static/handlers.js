@@ -1,6 +1,8 @@
 var world = require('./world.js');
 var rendering = require('./rendering.js');
 
+var debug = false;
+
 updateOrtho = function() {
   var width = window.innerWidth;
   var height = window.innerHeight;
@@ -27,42 +29,6 @@ resizeHandler = function (camera, renderer) {
   }
 }
 
-
-keyPressHandler = function(ev) {
-  var c = String.fromCharCode(ev.keyCode);
-  if (debug)
-    console.log('char: ', c);
-  keyHandle(c);
-}
-keyDownHandler = function(ev) {
-  if (debug)
-    console.log('key: ', ev.keyCode);
-  var k = '';
-  switch (ev.keyCode) {
-    case 8:
-      k = 'BACKSPACE';
-      break;
-    case 27:
-      k = 'ESCAPE';
-      break;
-    case 37:
-      k = 'LEFT';
-      break;
-    case 38:
-      k = 'UP';
-      break;
-    case 39:
-      k = 'RIGHT';
-      break;
-    case 40:
-      k = 'DOWN';
-      break;
-    default:
-      return;
-  }
-
-  keyHandle(k);
-}
 
 // Game Keybindings
 keyHandle = function(key) {
@@ -120,5 +86,7 @@ initHandlers = function() {
 
 module.exports = {
   initHandlers: initHandlers,
+  resizeHandler: resizeHandler,
+  debug: debug,
 }
 

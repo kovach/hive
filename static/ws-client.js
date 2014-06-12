@@ -1,5 +1,5 @@
 var WebSocket = require('ws');
-var ws = new WebSocket('ws://localhost:8888/ws');
+var ws = new WebSocket('ws://localhost:3000/hive');
 console.log(ws);
 console.log(ws.on);
 ws.onopen = function() {
