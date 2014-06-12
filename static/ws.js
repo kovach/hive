@@ -28,7 +28,6 @@ var init_server = function() {
     clients[id] = ws;
 
     ws.on('message', function(message) {
-      console.log('message: ', message);
       var msg = JSON.parse(message);
       msg.id = id;
       // Process
@@ -45,6 +44,8 @@ var init_server = function() {
           break;
       }
       // Log
+      msg.time = new Date().getTime();
+      console.log('message: ', msg);
       log(JSON.stringify(msg));
     });
 

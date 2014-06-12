@@ -37,6 +37,18 @@ var to_key_handler = function(key_fn, debug) {
       case 13:
         k = 'RETURN';
         break;
+      case 17:
+        k = 'CTRL';
+        break;
+      case 16:
+        k = 'SHIFT';
+        break;
+      case 18:
+        k = 'ALT';
+        break;
+      case 9:
+        k = 'TAB';
+        break;
       default:
         return;
     }

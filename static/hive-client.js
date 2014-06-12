@@ -33,6 +33,11 @@ var init_socket = function(callback) {
     }
   };
 
+  ws.onclose = function() {
+    // Disconnection
+    dom.mk_text($('main'), 'YOU HAVE DISCONNECTED. PLEASE REFRESH', '#f00');
+  };
+
   return ws;
 }
 
@@ -77,6 +82,18 @@ var box_handle_msg = function(box) {
       case 'RETURN':
         var s = dom.mk_text(box, symbols.ret, color);
         break;
+      case 'CTRL':
+        var s = dom.mk_text(box, symbols.ctrl, color);
+        break;
+      case 'ALT':
+        var s = dom.mk_text(box, symbols.alt, color);
+        break;
+      case 'TAB':
+        var s = dom.mk_text(box, symbols.tab, color);
+        break;
+      case 'SHIFT':
+        // too noisy
+        break;
       default:
         var s = dom.mk_text(box, char, color);
         break;
@@ -84,20 +101,29 @@ var box_handle_msg = function(box) {
   }
 }
 
+var tc = String.fromCharCode
 var symbols = {
-  left: String.fromCharCode(0x2190),
-  up: String.fromCharCode(0x2191),
-  right: String.fromCharCode(0x2192),
-  down: String.fromCharCode(0x2193),
+  left: tc(0x2190),
+  up: tc(0x2191),
+  right: tc(0x2192),
+  down: tc(0x2193),
 
-  back: String.fromCharCode(0x21B6),
-  ret: String.fromCharCode(0x21B5),
-  esc: String.fromCharCode(0x21B8),
+  back: tc(0x21B6),
+  ret: tc(0x21B5),
+  esc: tc(0x21B8),
+
+  ctrl: tc(0x2303),
+  shift: tc(0x21E7),
+  alt: tc(0x2325),
+  tab: tc(0x21E5),
 }
 
 var init_ui = function() {
   var id = _.uniqueId();
   var box = dom.mk_div($('main'), 'box', id);
+
+  // Help Text
+  dom.mk_text($('main'), 'click the box and type', '#fff');
 
   tables['box'] = {handle: box_handle_msg(box)};
 
@@ -108,7 +134,7 @@ var init_ui = function() {
       ws.send(JSON.stringify(to_msg(char)));
     }
 
-    var debug = false;
+    var debug = true;
     i.add_key_handler(box, handler, debug);
   }
 

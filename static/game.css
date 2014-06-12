@@ -17,6 +17,8 @@ canvas {
   display: table;
   top: 0; right: 0; bottom: 0; left: 0;
 
+  white-space: pre-wrap;
+
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -37,7 +39,7 @@ canvas {
   display:table-cell;
 
   font-family: monospace;
-  font-size: 12pt;
+  font-size: 13pt;
 
 }
 .str, .symbol {
