@@ -5,4 +5,4 @@ dom = require('./dom.js');
 
 //h.initGL();
 
-var ws = c.init_ui();
+//var ws = c.init_ui();
