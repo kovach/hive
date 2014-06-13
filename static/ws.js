@@ -35,7 +35,6 @@ var init_server = function() {
         case 'msg':
           console.log('processing from ', id);
           _.each(clients, function(ws, index) {
-            console.log('checking: ', index);
             if (index+'' !== id+'') {
               console.log('not equal: ', id, index);
               ws.send(message);

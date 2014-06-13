@@ -1,5 +1,5 @@
-r = require ('./rendering.js');
-h = require('./hive.js');
+//r = require ('./rendering.js');
+//h = require('./hive.js');
 c = require('./hive-client.js');
 dom = require('./dom.js');
 
