@@ -4,9 +4,10 @@ var debug;
 var to_key_handler = function(key_fn, debug) {
 
   var press = function(ev) {
-    var c = String.fromCharCode(ev.keyCode);
-    if (debug)
+    var c = String.fromCharCode(ev.charCode);
+    if (debug){
       console.log('char: ', c);
+    }
     key_fn(c);
   }
 
