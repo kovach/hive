@@ -1,8 +1,7 @@
-//r = require ('./rendering.js');
-//h = require('./hive.js');
 c = require('./hive-client.js');
-dom = require('./dom.js');
 
-//h.initGL();
+box = require('./box/box.js');
+
+b = new box.box();
 
 var ws = c.init_ui();
