@@ -1,6 +1,13 @@
-var mk_hook = function(h) {
+var pre_hook = function() {
+  this.table = new table();
 }
+pre_hook.prototype = {
+}
+//    return {
+//      hook : _,
+//      output: _,
+//    };
+
 
 module.exports = {
-  mk_hook: mk_hook,
 }

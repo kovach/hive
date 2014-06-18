@@ -1,12 +1,15 @@
 var _ = require('underscore');
-var p = require('./box/parsing.js');
+var p = require('./parsing.js');
 
 // stuff
 var names = {
-  cursor: 'c',
-  nothing: 'n',
-  just: 'j',
-  set: 's',
+  cursor: 'cursor',
+  nothing: 'nothing',
+  just: 'just',
+  set: 'set',
+  match: 'match',
+  hole: '_',
+  seq: 'seq',
 }
 
 var nothing = function() {
@@ -21,14 +24,17 @@ var set = function(name, val) {
 var match = function(head, obj) {
   return (_.isObject(obj) && obj.head === head);
 }
+var mk = function(head) {
+  return {head: head};
+}
 
 var table = function() {
   this.val = [];
 }
 table.prototype = {
   add: function(val) {
-    this.val = this.val.concat([val]);
-    return this.val.length - 1;
+  add: function(val) {
+    return this.adds([val]);
   },
   adds: function(vals) {
     this.val = this.val.concat(vals);
@@ -43,7 +49,7 @@ table.prototype = {
   read: function(name) {
     for(var i = this.val.length - 1; i >= 0; i--) {
       var o = this.look(i);
-      if (match(names.set, o)) {
+      if (match(names.set, o) && o.name === name) {
         return just(o.val);
       }
     }
@@ -59,24 +65,52 @@ var cell = function(id, val) {
   this.val = val;
 }
 
-var hook = function(h, s, t) {
+var hook = function(id, s, t) {
   this.source = s;
   this.target = t;
-  this.hook = p.mk_hook(h);
+  this.type_id = id;
 
   this.table = new table();
   this.table.set(names.cursor, 0);
 }
 hook.prototype = {
   slice: function(t) {
-    return t.val.slice(this.cursor, t.val.length);
+    var l = t.list();
+    return l.slice(this.cursor, l.length);
   },
   update: function(delta) {
-    this.table.set(names.cursor, this.table.read(names.cursor).val + delta);
+    return this.table.set(names.cursor, this.table.read(names.cursor).val + delta);
   },
+  add: function(val) {
+    return this.table.add(val);
+  },
+  look: function(id) {
+    return this.table.look(id);
+  },
+  // TODO
+  match: function(string, pattern) {
+    switch (pattern.head) {
+      case names.match:
+        return util.prefix(string, pattern);
+        break;
+      case names.hole:
+        if (string.length > 0) {
+          return {val: string[0], len: 1};
+        } else {
+          return {val: "", len: 0};
+        }
+        break;
+      case names.seq:
+        break;
+  },
+  // TODO
   parse: function(vals, source, target) {
     var string = this.slice(source);
-    var result = this.hook(string);
+
+    var matcher = _.find(this.table, function(parser) {
+      // try to match table against string
+    });
+    // var result = apply(matcher, string);
     return result;
   },
 }
@@ -100,16 +134,22 @@ context.prototype = {
     var world = this;
     var source = world.table.look(id);
     var result = [];
-    result.push(new cell(id, vals)]);
-    _.each(b.hooks.list(), function(hook) {
-      var target = this.table.look(hook.target);
-      var new_vals = hook.parse(vals, source.table, target.table);
-      result = result.concat(new_vals);
+    result.push(new cell(id, vals));
+    _.each(source.hooks.list(), function(hook_id) {
+      var hook = this.look(hook_id);
+      var hook_spec = this.look(hook.type_id);
+      var t = hook.target;
+      var target = this.table.look(t);
+      var output_tuple = hook_spec.parse(vals, source.table, target.table);
+      result =
+        result.concat(new cell(hook_id, tuple.hook))
+      result = 
+        result.concat(world.suppose(t, tuple.output));
     });
 
     return result;
   },
-  add: function(id, vals) {
+  run: function(id, vals) {
     var mapping = this.suppose(id, vals);
     _.each(mapping, function(change) {
       var id = change.id;
@@ -117,27 +157,30 @@ context.prototype = {
 
       var obj = this.table.look(id);
       obj.adds(vals);
-    }
+    });
   },
+  add: function(val) {
+    return this.table.add(val);
+  },
+  look: function(id) {
+    return this.table.look(id);
+  }
 
   add_box: function(box) {
-    this.table.add(box);
+    return this.add(box);
   },
-  add_hook: function(h, s, t) {
-    var hook_obj = new hook(h, s, t);
-    var ref = this.table.add(hook_obj);
-    this.table.look(s).hooks.add(ref);
-  },
-}
+  add_hook: function(id, s, t) {
+    var hook = new hook(id, s, t);
+    var hook_ref = this.add(hook);
 
-parse = function(hook, base, vals, target) {
-  var string = base.slice().concat(vals);
-  var change = hook(string);
-}
-mk_hook = function() {
+    this.look(s).hook(hook_ref);
+    return hook_ref;
+  },
 }
 
 module.exports = {
-  box: box,
   table: table,
+  hook: hook,
+  box: box,
+  context: context,
 }
