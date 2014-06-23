@@ -1,12 +1,22 @@
-var WebSocket = require('ws');
-var ws = new WebSocket('ws://localhost:3000/hive');
-console.log(ws);
-console.log(ws.on);
-ws.onopen = function() {
-  console.log('open!');
-  ws.send('hi, from client');
-};
-ws.onmessage = function(message) {
-  console.log('message: ', message);
-  console.log(ws);
-};
+var init_ws = function(open_callback, handler, disconnect_handler) {
+  var ws = new WebSocket('ws://cutfree.net:3000/hive');
+
+  ws.onopen = function() {
+    console.log('ws open!');
+    open_callback(ws);
+  };
+  ws.onmessage = function(message) {
+    var msg = JSON.parse(message.data);
+    handler(msg);
+  };
+
+  ws.onclose = function() {
+    disconnect_handler();
+  };
+
+  return ws;
+}
+
+module.exports = {
+  init_ws: init_ws
+}

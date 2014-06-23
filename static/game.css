@@ -19,10 +19,8 @@ canvas {
 
   white-space: pre-wrap;
 
-  box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -o-box-sizing: border-box;
+  font-family: monospace;
+  font-size: 12pt;
 }
 
 .box {
@@ -42,6 +40,10 @@ canvas {
   font-size: 13pt;
 
 }
+.edit-box {
+  display: table-cell;
+}
+
 .str, .symbol {
   display: inline-block;
   white-space: pre;
