@@ -1,38 +1,22 @@
 var _ = require('underscore');
 var p = require('./parsing.js');
+var u = require('./util.js');
 
-// stuff
-var names = {
-  cursor: 'cursor',
-  nothing: 'nothing',
-  just: 'just',
-  set: 'set',
-  match: 'match',
-  hole: '_',
-  seq: 'seq',
-}
+var names = require('./types.js');
 
-var nothing = function() {
-  return {head: names.nothing};
-}
-var just = function(x) {
-  return {head: names.just, val: x};
-}
 var set = function(name, val) {
   return {head: names.set, name: name, val: val};
 }
 var match = function(head, obj) {
   return (_.isObject(obj) && obj.head === head);
 }
-var mk = function(head) {
-  return {head: head};
-}
-
-var table = function() {
+var table = function(mvals) {
   this.val = [];
+  if (mvals !== undefined) {
+    this.adds(mvals);
+  }
 }
 table.prototype = {
-  add: function(val) {
   add: function(val) {
     return this.adds([val]);
   },
@@ -45,6 +29,9 @@ table.prototype = {
   },
   look: function(id) {
     return this.val[id];
+  },
+  length: function() {
+    return this.val.length;
   },
   read: function(name) {
     for(var i = this.val.length - 1; i >= 0; i--) {
@@ -65,10 +52,10 @@ var cell = function(id, val) {
   this.val = val;
 }
 
-var hook = function(id, s, t) {
+var hook = function(table, s, t) {
   this.source = s;
   this.target = t;
-  this.type_id = id;
+  this.hook_table = table;
 
   this.table = new table();
   this.table.set(names.cursor, 0);
@@ -88,30 +75,9 @@ hook.prototype = {
     return this.table.look(id);
   },
   // TODO
-  match: function(string, pattern) {
-    switch (pattern.head) {
-      case names.match:
-        return util.prefix(string, pattern);
-        break;
-      case names.hole:
-        if (string.length > 0) {
-          return {val: string[0], len: 1};
-        } else {
-          return {val: "", len: 0};
-        }
-        break;
-      case names.seq:
-        break;
-  },
-  // TODO
   parse: function(vals, source, target) {
     var string = this.slice(source);
-
-    var matcher = _.find(this.table, function(parser) {
-      // try to match table against string
-    });
-    // var result = apply(matcher, string);
-    return result;
+    p.parse_string(string, this.hook_table);
   },
 }
 
@@ -136,11 +102,10 @@ context.prototype = {
     var result = [];
     result.push(new cell(id, vals));
     _.each(source.hooks.list(), function(hook_id) {
-      var hook = this.look(hook_id);
-      var hook_spec = this.look(hook.type_id);
-      var t = hook.target;
+      var hook_obj = this.look(hook_id);
+      var t = hook_obj.target;
       var target = this.table.look(t);
-      var output_tuple = hook_spec.parse(vals, source.table, target.table);
+      var output_tuple = hook_obj.parse(vals, source.table, target.table);
       result =
         result.concat(new cell(hook_id, tuple.hook))
       result = 
@@ -164,18 +129,58 @@ context.prototype = {
   },
   look: function(id) {
     return this.table.look(id);
-  }
+  },
 
   add_box: function(box) {
     return this.add(box);
   },
   add_hook: function(id, s, t) {
-    var hook = new hook(id, s, t);
-    var hook_ref = this.add(hook);
+    var hook_table = this.look(id);
+    var hook_obj = new hook(hook_table, s, t);
+    var hook_ref = this.add(hook_obj);
 
     this.look(s).hook(hook_ref);
     return hook_ref;
   },
+}
+
+// Turns a string into a parser table
+// '_' is special symbol for hole
+var pre_parser = function(pre_string, post_fn) {
+  var row = new table();
+  var pre_t = new table();
+  var post_t = new table();
+
+  var pre = _.map(pre_string, function(char) {
+    if (char === '_') {
+      return {head: names.hole};
+    } else {
+      return {head: names.match, val: char};
+    }
+  });
+  pre_t.adds(pre);
+
+  //var post = _.map(post_string, function(char) {
+  //  return u.m_maybe(u.is_digit(char), {
+  //    nothing: function() {
+  //      return {head: names.match, val: char};
+  //    },
+  //    just: function(val) {
+  //      return {head: names.ref, val: char};
+  //    }
+  //  });
+  //});
+  //post_t.adds(post);
+
+  row.add(pre_t);
+  row.add(post_fn);
+
+  return row;
+}
+var str_fn = function(post_string) {
+  return function() {
+    return post_string;
+  }
 }
 
 module.exports = {
@@ -183,4 +188,8 @@ module.exports = {
   hook: hook,
   box: box,
   context: context,
+
+  pre_parser: pre_parser,
+  str_fn: str_fn,
+
 }
