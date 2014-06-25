@@ -9,11 +9,7 @@ var dom = require('./dom');
 var wu = require('./web/util.js');
 var b = require ('./web/box.js');
 
-var colors = ['#f00', '#00f', '#3c3', '#f90', '#0c0',
-              '#909', '#fff', '#669'];
 var id = undefined;
-
-var tables = {};
 
 var ws_msg_handler = function(msg) {
   switch (msg.type) {
@@ -21,19 +17,12 @@ var ws_msg_handler = function(msg) {
       id = msg.id;
       break;
     case 'msg':
-      send('box', msg);
+      // TODO
       break;
   }
 }
 var ws_close_handler = function() {
     dom.app(dom.get('main'), dom.mk_text('YOU HAVE DISCONNECTED. PLEASE REFRESH', '#f00'));
-}
-
-var send = function(name, msg) {
-  var obj = tables[name];
-  if (obj) {
-    obj.handle(msg);
-  }
 }
 
 var to_msg = function(char) {
@@ -56,25 +45,19 @@ var box_handle_msg = function(box) {
 }
 
 var init_ui = function() {
-  var id = _.uniqueId();
   var main = dom.get('main');
-  var box = dom.app(main, dom.mk_div('box', id));
+
+  var maker = new b.maker(main);
 
   var edit = new b.box_ui(main);
-  _.each("", function(char) {
+  _.each("type here", function(char) {
     edit.add_char(char);
   });
-
-  // Help Text
-  //dom.app(main, dom.mk_text('click the box and type', '#fff'));
-
-  tables['box'] = {handle: box_handle_msg(box)};
 
   var mk_handler = function(ws) {
     var handler = function(char) {
       var msg = to_msg(char);
 
-      box_handle_msg(box)(msg);
       edit.handle_char(char);
       ws.send(JSON.stringify(msg));
     }

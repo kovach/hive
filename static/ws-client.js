@@ -1,4 +1,4 @@
-var init_ws = function(open_callback, handler, disconnect_handler) {
+var init_ws = function(open_callback, handler, disconnect_callback) {
   var ws = new WebSocket('ws://cutfree.net:3000/hive');
 
   ws.onopen = function() {
@@ -11,7 +11,7 @@ var init_ws = function(open_callback, handler, disconnect_handler) {
   };
 
   ws.onclose = function() {
-    disconnect_handler();
+    disconnect_callback();
   };
 
   return ws;

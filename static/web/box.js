@@ -67,7 +67,7 @@ var box_ui = function(parent) {
   this.front = [];
   this.back = [];
 
-  this.color = "#ff8";
+  this.color = "#fc5";
 
   this.div = dom.mk_div('edit-box', _.uniqueId());
   dom.app(parent, this.div);
