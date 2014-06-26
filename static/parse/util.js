@@ -1,5 +1,6 @@
 var p = require('./parse.js');
 
+// Turn a string into a parser
 var mk_neg_p = function(str) {
   blind = p.seqs([
       p.neg_val('_'),

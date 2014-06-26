@@ -4,8 +4,9 @@ var pair = function(fst, snd) {
   return {fst: fst, snd: snd};
 }
 
-var newc = function(str) {
-  return { str: str.split(''),
+var newc = function(arr) {
+  return {
+    str: arr,
     out: [],
     side: [],
     fail: false,
@@ -16,7 +17,8 @@ var arrc = function(arr) {
   return arr.concat([]);
 }
 var copy = function(c) {
-  return {str: arrc(c.str),
+  return {
+    str: arrc(c.str),
     side: arrc(c.side),
     out: arrc(c.out),
     fail: c.fail,
@@ -58,7 +60,7 @@ var fail = function(c) {
 var neg_val = function(val) {
   return function(c) {
     return bind(next(c), function(c, next_val) {
-      if (next_val === val) {
+      if (_.isEqual(next_val, val)) {
         return pop(c);
       } else {
         return fail(c);

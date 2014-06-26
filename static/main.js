@@ -3,8 +3,9 @@ var dom = require('./dom');
 client = require('./hive-client.js');
 
 w = require('./web/box.js');
-p = require('./parse/parse.js');
-t = require('./parse/util.js');
+p   = require('./parse/parse.js');
+pmk = require('./parse/util.js');
+obj = require('./box/event.js');
 
 
 var ws = client.init_ui();
@@ -13,10 +14,6 @@ c = p.newc('hello');
 dub = p.seqs([p.blind,  p.neg_ref(0),   p.pos_ref(0)]);
 sing = p.seqs([p.blind, p.neg_val('c'), p.pos_ref(0)]);
 
-esc = p.seqs([p.neg_val('\\'), p.blind, p.pos_ref(0)]);
-id = p.seq(p.blind, p.pos_ref(0));
-
-charp = p.or(esc, id);
 
 rev = p.seqs([p.blind, p.blind, p.pos_ref(0), p.pos_ref(1)]);
 
@@ -25,3 +22,13 @@ wrapper = function(env) {
 }
 
 ev = p.evalp;
+
+
+var noop = function(str) {
+  return function(obj, msg) {
+    console.log(str, ' received ', msg);
+  }
+}
+b1 = new obj.object(noop('b1'));
+b2 = new obj.object(noop('b2'));
+b1.add(obj.parse_hook(b2, dub));
