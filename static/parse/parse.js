@@ -165,7 +165,10 @@ var none = function(c) {
 }
 
 var many = function(p) {
-  return or(lseq(p, function() { return many(p); }), none);
+  return or(many1(p), none);
+}
+var many1 = function(p) {
+  return lseq(p, function() { return many(p); });
 }
 
 
@@ -193,4 +196,5 @@ module.exports = {
   maker: maker,
   none: none,
   many: many,
+  many1: many1,
 }

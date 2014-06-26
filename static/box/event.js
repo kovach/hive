@@ -27,13 +27,17 @@ var hook = function(target, f) {
   });
 }
 
+var fail = function() {
+  return undefined;
+}
+
 var parse_hook = function(target, parser) {
   var obj = hook(target, function(obj, msg) {
     obj.str = obj.str.concat(msg);
-    var out = p.many(parser)(p.newc(obj.str));
-    if (out.fail || out.out.length == 0) {
+    var out = p.many1(parser)(p.newc(obj.str));
+    if (out.fail) {
       console.log('no parse');
-      return;
+      return fail();
     } else {
       obj.str = out.str;
       return out.out;
