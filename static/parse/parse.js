@@ -32,6 +32,9 @@ var next = function(c) {
     return fail(c);
   }
 }
+var ref = function(ind, c) {
+  return c.side[c.side.length - 1 - ind];
+}
 var pop = function(c) {
   var out = copy(c);
   out.str = out.str.slice(1, out.str.length);
@@ -83,15 +86,22 @@ var blind = function(c) {
 }
 var neg_ref = function(index) {
   return function(c) {
-    return neg_val(c.side[index])(c);
+    return neg_val(ref(index, c))(c);
   }
 }
 var pos_ref = function(index) {
   return function(c) {
-    return push_out(c, c.side[index]);
+    return push_out(c, ref(index, c));
   }
 }
 
+var lseq = function(p1, fp2) {
+  return function(c) {
+    return bind(p1(c), function(c) {
+      return fp2()(c);
+    });
+  }
+}
 var seq = function(p1, p2) {
   return function(c) {
     return bind(p1(c), function(c) {
@@ -123,6 +133,39 @@ var evalp = function(p, arr) {
   }
 }
 
+var or = function(p1, p2) {
+  return function(c) {
+    var r1 = p1(c);
+    if (r1.fail) {
+      return p2(c);
+    }
+    return r1;
+  }
+}
+var ors = function(ps) {
+  return function(c) {
+    if (ps.length === 0) {
+      return fail(c);
+    } else {
+      return or(ps[0], ors(ps.slice(1, ps.length)))(c);
+    }
+  }
+}
+
+var maker = function(ind, fn) {
+  return function(c) {
+    var val = fn(ref(ind, c));
+    return pos_val(val)(c);
+  }
+}
+var none = function(c) {
+  return c;
+}
+
+var many = function(p) {
+  return or(lseq(p, function() { return many(p); }), none);
+}
+
 
 module.exports = {
   newc: newc,
@@ -143,7 +186,9 @@ module.exports = {
   seqs: seqs,
   string: string,
   evalp: evalp,
+  or: or,
+  ors: ors,
+  maker: maker,
+  none: none,
+  many: many,
 }
-
-
-
