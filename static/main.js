@@ -1,8 +1,10 @@
 _ = require('underscore');
 var dom = require('./dom');
-c = require('./hive-client.js');
+client = require('./hive-client.js');
 
 w = require('./web/box.js');
+p = require('./parse/parse.js');
+
 
 //var u = require('./box/util.js');
 //var names = require('./box/types.js');
@@ -30,4 +32,5 @@ w = require('./web/box.js');
 //w.add_hook(hook_id, id1, id2);
 
 
-var ws = c.init_ui();
+var ws = client.init_ui();
+
