@@ -21,6 +21,10 @@ canvas {
 
   font-family: monospace;
   font-size: 12pt;
+
+  min-width: 400px;
+  min-height: 400px;
+  outline: none;
 }
 
 .box {

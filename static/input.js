@@ -1,19 +1,19 @@
-var debug;
-
-
 var to_key_handler = function(key_fn, debug) {
 
   var press = function(ev) {
     var c = String.fromCharCode(ev.charCode);
-    if (debug){
-      console.log('char: ', c);
+    if (debug) {
+      console.log('key press: ', c);
+    }
+    if (ev.charCode === 13) {
+      return;
     }
     key_fn(c);
   }
 
   var down = function(ev) {
     if (debug)
-      console.log('key: ', ev.keyCode);
+      console.log('key down: ', ev.keyCode);
     var k = '';
     switch (ev.keyCode) {
       case 8:
@@ -50,6 +50,8 @@ var to_key_handler = function(key_fn, debug) {
       case 9:
         k = 'TAB';
         break;
+
+      // DEFAULT
       default:
         return;
     }
@@ -70,5 +72,4 @@ var add_key_handler = function(node, key_fn, debug) {
 
 module.exports = {
   add_key_handler: add_key_handler,
-  debug: debug,
 }

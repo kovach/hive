@@ -1,10 +1,13 @@
 var _ = require('underscore');
 var p = require('../parse/parse.js');
 
-var object = function(h) {
+var object = function(h, maybe_init) {
   this.handler = h;
   this.handlers = [];
   this.id = _.uniqueId();
+  if (maybe_init) {
+    maybe_init(this);
+  }
 }
 object.prototype = {
   add: function(h) {

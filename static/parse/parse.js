@@ -194,7 +194,6 @@ module.exports = {
   or: or,
   ors: ors,
   maker: maker,
-  none: none,
   many: many,
   many1: many1,
 }
