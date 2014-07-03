@@ -1,1 +1,1 @@
-(http://cutfree.net/hive/index.html)
+http://cutfree.net/hive/index.html
