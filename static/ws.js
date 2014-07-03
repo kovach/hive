@@ -61,4 +61,3 @@ var init_server = function() {
 }
 
 init_server();
-

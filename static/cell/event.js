@@ -14,18 +14,18 @@ object.prototype = {
     this.handlers.push(h);
   },
 }
-var send = function(obj, msg) {
-  obj.handler(obj, msg);
+var send = function(msg, obj) {
+  obj.handler(msg, obj);
   _.each(obj.handlers, function(h) {
-    send(h, msg);
+    send(msg, h);
   });
 }
 
-var hook = function(target, f) {
-  return new object(function(obj, msg) {
-    var out = f(obj, msg);
+var hook = function(f, target) {
+  return new object(function(msg, obj) {
+    var out = f(msg, obj);
     if (out !== undefined) {
-      send(target, out);
+      send(out, target);
     }
   });
 }
@@ -34,8 +34,8 @@ var fail = function() {
   return undefined;
 }
 
-var parse_hook = function(target, parser) {
-  var obj = hook(target, function(obj, msg) {
+var parse_hook = function(parser, target) {
+  var obj = hook(target, function(msg, obj) {
     obj.str = obj.str.concat(msg);
     var out = p.many1(parser)(p.newc(obj.str));
     if (out.fail) {

@@ -6,9 +6,11 @@ var wsc = require ('../ws-client');
 var input = require('../input');
 var dom = require('../dom');
 
-var ev = require('./event.js');
-var log = require('./log.js');
+var ev = require('./event');
+var log = require('./log');
 var objects = require('./objects');
+
+var edit = require('../edit/box');
 
 
 var id = undefined;
@@ -46,7 +48,7 @@ var mk_cell = function(obj_log) {
   return box;
 }
 
-var key_hook = function(key_obj, msg) {
+var key_hook = function(msg, key_obj) {
   console.log(msg);
 }
 
@@ -61,17 +63,24 @@ var init_ui = function() {
   var ws_out_box = mk_cell(obj_log);
   var null_box = mk_cell(obj_log);
 
-  key_box.add(ev.hook(null_box, function(obj, msg) {
+  var visual_box = new edit.box_ui();
+
+  key_box.add(ev.hook(function(msg) {
     console.log('key-box: ', msg);
-  }));
+    ev.send(msg, ws_out_box);
+  }, null_box));
+
+  ws_in_box.add(ev.hook(function(msg) {
+    console.log('received: ', msg);
+  }, null_box));
 
   // Capture messages from keyboard
   var client_key_handler = function(char) {
-    ev.send(key_box, [char]);
+    ev.send([char], key_box);
   }
   // Capture messages from server
   var client_ws_handler = function(msg) {
-    ev.send(ws_in_box, msg);
+    ev.send(msg, ws_in_box);
   }
   // Capture disconnect message
   var ws_close_handler = function() {
@@ -82,14 +91,14 @@ var init_ui = function() {
   // Hook ws_out event object to ws
   var open_callback = function(ws) {
     var ws_obj = {};
-    ws_obj.handler = function(ws_obj, msg) {
+    ws_obj.handler = function(msg, ws_obj) {
       ws.send(JSON.stringify(msg));
     }
-    var hook = ev.hook(ws_obj, objects.id_hook);
+    var hook = ev.hook(objects.id_hook, ws_obj);
     ws_out_box.add(hook);
   }
 
-  var debug = true;
+  var debug = false;
   input.add_key_handler(dom_main, client_key_handler, debug);
 
   // Open socket

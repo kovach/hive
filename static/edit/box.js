@@ -43,7 +43,7 @@ var maker = function(parent) {
   this.parent = parent;
 }
 maker.prototype = {
-  handle: function(msg) {
+  handler: function(msg) {
     switch (msg.type) {
       case maker_msg.new:
         new box_ui(this.parent);
@@ -83,7 +83,7 @@ box_ui.prototype = {
   handle_char: function(char) {
     return this.handle(char_msg(char));
   },
-  handle: function(msg) {
+  handler: function(msg) {
     if (msg === undefined) {
       return;
     }
