@@ -41,13 +41,6 @@ var box_handle_msg = function(box) {
   }
 }
 
-var mk_cell = function(obj_log) {
-  var l = new log.log();
-  var box = objects.mk_accumulator(l);
-  var ref = obj_log.add(box);
-  return box;
-}
-
 var key_hook = function(msg, key_obj) {
   console.log(msg);
 }
@@ -58,12 +51,19 @@ var init_ui = function() {
 
   var obj_log = new log.log();
 
-  var key_box = mk_cell(obj_log);
-  var ws_in_box = mk_cell(obj_log);
-  var ws_out_box = mk_cell(obj_log);
-  var null_box = mk_cell(obj_log);
+  var cell = function() {
+    return objects.mk_cell(obj_log);
+  }
 
-  var visual_box = new edit.box_ui();
+  // Box objects/hooks //
+  var key_box = cell();
+  var ws_in_box = cell();
+  var ws_out_box = cell();
+  var null_box = cell();
+
+  var doc_box = cell();
+  var visual_box = new edit.box_ui(dom_main);
+  console.log(visual_box);
 
   key_box.add(ev.hook(function(msg) {
     console.log('key-box: ', msg);
@@ -74,19 +74,20 @@ var init_ui = function() {
     console.log('received: ', msg);
   }, null_box));
 
+  //TODO should ws_in_box be receiving msg with timestamp/user id?
+  ws_in_box.add(ev.hook(function(msg) {
+    var val = msg.val;
+    return val;
+  }, doc_box));
+
+  doc_box.add(ev.hook(function(msg) {
+    return edit.char_msg(msg);
+  }, visual_box));
+
+  // Callback Functions //
   // Capture messages from keyboard
   var client_key_handler = function(char) {
-    ev.send([char], key_box);
-  }
-  // Capture messages from server
-  var client_ws_handler = function(msg) {
-    ev.send(msg, ws_in_box);
-  }
-  // Capture disconnect message
-  var ws_close_handler = function() {
-    dom.app(dom_main,
-        dom.mk_text('YOU HAVE DISCONNECTED. PLEASE REFRESH',
-          '#f00'));
+    ev.send(char, key_box);
   }
   // Hook ws_out event object to ws
   var open_callback = function(ws) {
@@ -97,7 +98,16 @@ var init_ui = function() {
     var hook = ev.hook(objects.id_hook, ws_obj);
     ws_out_box.add(hook);
   }
-
+  // Capture messages from server
+  var client_ws_handler = function(msg) {
+    ev.send(msg, ws_in_box);
+  }
+  // Capture disconnect message
+  var close_callback = function() {
+    dom.app(dom_main,
+        dom.mk_text('YOU HAVE DISCONNECTED. PLEASE REFRESH',
+          '#f00'));
+  }
   var debug = false;
   input.add_key_handler(dom_main, client_key_handler, debug);
 
@@ -105,7 +115,7 @@ var init_ui = function() {
   return wsc.init_ws(
       open_callback,
       client_ws_handler,
-      ws_close_handler);
+      close_callback);
 }
 
 module.exports = {

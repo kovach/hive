@@ -19,7 +19,7 @@ canvas {
 
   white-space: pre-wrap;
 
-  font-family: monospace;
+  font-family: "DejaVu Sans Mono", monospace;
   font-size: 12pt;
 
   min-width: 400px;
@@ -40,8 +40,8 @@ canvas {
 
   display:table-cell;
 
-  font-family: monospace;
-  font-size: 13pt;
+  font-family: "DejaVu Sans Mono", monospace;
+  font-size: 12pt;
 
 }
 .edit-box {

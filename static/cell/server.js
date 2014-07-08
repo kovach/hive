@@ -1,4 +1,4 @@
-var WSS = require('ws').Server;
+var ws = require('ws');
 var http = require('http');
 var express = require('express');
 
@@ -18,7 +18,7 @@ var init_server = function() {
   var server = http.createServer(app);
   server.listen(3000);
 
-  var wss = new WSS({server: server});
+  var wss = new ws.Server({server: server});
 
   wss.on('connection', function(ws) {
     var id = _.uniqueId();

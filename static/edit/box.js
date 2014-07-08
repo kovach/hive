@@ -1,5 +1,6 @@
 var _ = require('underscore');
-var dom = require('../dom.js');
+var dom = require('../dom');
+var util = require ('./util');
 
 var char_msg = function(char) {
   var out = {};
@@ -89,7 +90,7 @@ box_ui.prototype = {
     }
     switch (msg.type) {
       case box_msg.symbol:
-        this.add_char(to_string(msg.val));
+        this.add_char(util.to_string(msg.val));
         break;
       case box_msg.move:
         if (msg.val === 'LEFT') {
@@ -140,4 +141,5 @@ box_ui.prototype = {
 module.exports = {
   maker: maker,
   box_ui: box_ui,
+  char_msg: char_msg,
 }
