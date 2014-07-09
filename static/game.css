@@ -45,7 +45,8 @@ canvas {
 
 }
 .edit-box {
-  display: table-cell;
+  display: inline;
+  border-style: solid;
 }
 
 .str, .symbol {

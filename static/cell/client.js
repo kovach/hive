@@ -61,9 +61,9 @@ var init_ui = function() {
   var ws_out_box = cell();
   var null_box = cell();
 
+  var maker_box = cell();
   var doc_box = cell();
   var visual_box = new edit.box_ui(dom_main);
-  console.log(visual_box);
 
   key_box.add(ev.hook(function(msg) {
     console.log('key-box: ', msg);
@@ -83,6 +83,15 @@ var init_ui = function() {
   doc_box.add(ev.hook(function(msg) {
     return edit.char_msg(msg);
   }, visual_box));
+
+  doc_box.add(ev.hook(function(msg) {
+    if (msg == 'RETURN') {
+      return 'new';
+    } else {
+      return;
+    }
+  }, maker_box));
+
 
   // Callback Functions //
   // Capture messages from keyboard
@@ -108,7 +117,7 @@ var init_ui = function() {
         dom.mk_text('YOU HAVE DISCONNECTED. PLEASE REFRESH',
           '#f00'));
   }
-  var debug = false;
+  var debug = true;
   input.add_key_handler(dom_main, client_key_handler, debug);
 
   // Open socket

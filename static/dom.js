@@ -8,7 +8,11 @@ var app = function(parent, node) {
   return node;
 }
 var before = function(node, parent, sibling) {
-  parent.insertBefore(node, sibling);
+  if (sibling) {
+    parent.insertBefore(node, sibling);
+  } else {
+    app(parent, node);
+  }
   return node;
 }
 var set = function(node, attr, val) {

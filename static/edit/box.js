@@ -68,9 +68,11 @@ var box_ui = function(parent) {
   this.front = [];
   this.back = [];
 
-  this.color = "#fc5";
+  this.color = "#ccc";
+  this.border_color = "#999";
 
   this.div = dom.mk_div('edit-box', _.uniqueId());
+  dom.set(this.div, 'style', 'border-color: ' + this.border_color);
   dom.app(parent, this.div);
 }
 
@@ -109,7 +111,7 @@ box_ui.prototype = {
   },
   add_char: function(char) {
     var node = dom.mk_text(char, this.color);
-    dom.before(node, this.parent, _.last(this.back));
+    dom.before(node, this.div, _.last(this.back));
     this.front.push(node);
   },
   left: function() {
@@ -137,6 +139,25 @@ box_ui.prototype = {
   },
 }
 
+var pseudo_rand = function(num) {
+  // idea from SO
+  var x = Math.sin(num) * 100000;
+  var f = x - Math.floor(x);
+  return f;
+}
+var colors = [
+  0xffa200,
+  0x00a03e,
+  0x24a8ac,
+  0x0087cb,
+  0x982395,
+  0xf2671f,
+  0xc91b26,
+  0x9c0f5f,
+  0x60047a,
+  0x160a47,
+  0xbb0f00,
+];
 
 module.exports = {
   maker: maker,

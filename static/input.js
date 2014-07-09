@@ -8,6 +8,9 @@ var to_key_handler = function(key_fn, debug) {
     if (ev.charCode === 13) {
       return;
     }
+    if (ev.charCode === 32) {
+      ev.preventDefault();
+    }
     key_fn(c);
   }
 
